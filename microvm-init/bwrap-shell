@@ -1,0 +1,28 @@
+#!/bin/sh
+
+exec unshare \
+	--mount \
+	--uts --ipc \
+	--propagation=private --root /mount \
+	--fork --keep-caps /bin/sh -i
+
+# exec bwrap \
+# 	--bind /mount / \
+# 	--dev-bind /dev /dev \
+# 	--dev-bind /dev/ptmx /dev/ptmx \
+# 	--dev-bind /dev/pts /dev/pts \
+# 	--proc /proc \
+# 	--ro-bind /sys /sys \
+# 	--tmpfs /run \
+# 	--tmpfs /tmp \
+# 	--unshare-ipc \
+# 	--unshare-pid \
+# 	--unshare-uts \
+# 	--unshare-cgroup \
+# 	--share-net \
+# 	--uid $(id -u) \
+# 	--gid $(id -g) \
+# 	--cap-add all \
+# 	--hostname build-env \
+# 	--chdir "$(pwd)" \
+# 	-- /bin/sh -i

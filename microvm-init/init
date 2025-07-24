@@ -3,6 +3,17 @@ set -e
 
 PATH=/usr/bin:/usr/sbin:/sbin:/bin
 
+# Switch root to a tmpfs, this enables the use
+# of pivot_root and similar techniques (eg bubblewrap)
+if [ "$1" != "switched" ]; then
+	mkdir /newroot
+	mount -t tmpfs -o size=90% tmpfs /newroot
+	cd /
+	tar -cf - --one-file-system --exclude=/newroot . | tar -xf - -C /newroot
+	rmdir /newroot/newroot
+	exec switch_root /newroot /init switched
+fi
+
 # Default is 777 which creates problems
 chmod 0755 /
 
